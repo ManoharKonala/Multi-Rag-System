@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-RAG System</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-brain"></i>
+                    <h1>Multi-RAG System</h1>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-secondary" id="statsBtn">
+                        <i class="fas fa-chart-bar"></i>
+                        Statistics
+                    </button>
+                    <button class="btn btn-danger" id="clearBtn">
+                        <i class="fas fa-trash"></i>
+                        Clear Data
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-upload"></i> Upload Documents</h3>
+                    <div class="upload-area" id="uploadArea">
+                        <div class="upload-content">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>Drag & drop PDF files here or click to browse</p>
+                            <input type="file" id="fileInput" accept=".pdf" multiple hidden>
+                            <button class="btn btn-primary" id="browseBtn">Browse Files</button>
+                        </div>
+                    </div>
+                    <div class="upload-progress" id="uploadProgress" style="display: none;">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <span class="progress-text" id="progressText">Uploading...</span>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-cog"></i> Search Options</h3>
+                    <div class="search-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="searchText" checked>
+                            <span class="checkmark"></span>
+                            Text Content
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="searchImages" checked>
+                            <span class="checkmark"></span>
+                            Images
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="searchTables" checked>
+                            <span class="checkmark"></span>
+                            Tables
+                        </label>
+                    </div>
+                    <div class="search-config">
+                        <label for="topK">Results to show:</label>
+                        <select id="topK">
+                            <option value="3">3</option>
+                            <option value="5" selected>5</option>
+                            <option value="10">10</option>
+                            <option value="15">15</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-info-circle"></i> System Status</h3>
+                    <div class="status-indicator" id="statusIndicator">
+                        <div class="status-dot"></div>
+                        <span>Checking...</span>
+                    </div>
+                    <div class="system-stats" id="systemStats">
+                        <div class="stat-item">
+                            <span class="stat-label">Documents:</span>
+                            <span class="stat-value" id="docCount">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Elements:</span>
+                            <span class="stat-value" id="elementCount">0</span>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Content Area -->
+            <div class="content-area">
+                <!-- Search Section -->
+                <section class="search-section">
+                    <div class="search-container">
+                        <div class="search-input-container">
+                            <input type="text" id="searchInput" placeholder="Ask a question about your documents..." class="search-input">
+                            <button class="search-btn" id="searchBtn">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                        <div class="search-modes">
+                            <button class="mode-btn active" data-mode="query">
+                                <i class="fas fa-question-circle"></i>
+                                Q&A Mode
+                            </button>
+                            <button class="mode-btn" data-mode="hybrid">
+                                <i class="fas fa-layer-group"></i>
+                                Hybrid Search
+                            </button>
+                            <button class="mode-btn" data-mode="chat">
+                                <i class="fas fa-comments"></i>
+                                Chat Mode
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Results Section -->
+                <section class="results-section" id="resultsSection">
+                    <div class="welcome-message" id="welcomeMessage">
+                        <div class="welcome-content">
+                            <i class="fas fa-rocket"></i>
+                            <h2>Welcome to Multi-RAG System</h2>
+                            <p>Upload PDF documents and start asking questions to get intelligent answers based on text, images, and tables.</p>
+                            <div class="feature-grid">
+                                <div class="feature-item">
+                                    <i class="fas fa-file-text"></i>
+                                    <h4>Text Analysis</h4>
+                                    <p>Extract and search through document text</p>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="fas fa-image"></i>
+                                    <h4>Image Understanding</h4>
+                                    <p>Analyze charts, graphs, and visual content</p>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="fas fa-table"></i>
+                                    <h4>Table Processing</h4>
+                                    <p>Extract and query structured data</p>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="fas fa-brain"></i>
+                                    <h4>AI-Powered Responses</h4>
+                                    <p>Get intelligent answers with source citations</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Loading Indicator -->
+                    <div class="loading-indicator" id="loadingIndicator" style="display: none;">
+                        <div class="spinner"></div>
+                        <p>Processing your query...</p>
+                    </div>
+
+                    <!-- Query Results -->
+                    <div class="query-results" id="queryResults" style="display: none;">
+                        <div class="response-section">
+                            <h3><i class="fas fa-robot"></i> AI Response</h3>
+                            <div class="ai-response" id="aiResponse"></div>
+                        </div>
+                        <div class="sources-section">
+                            <h3><i class="fas fa-link"></i> Sources</h3>
+                            <div class="sources-container" id="sourcesContainer"></div>
+                        </div>
+                    </div>
+
+                    <!-- Hybrid Results -->
+                    <div class="hybrid-results" id="hybridResults" style="display: none;">
+                        <div class="content-type-tabs">
+                            <button class="tab-btn active" data-type="text">
+                                <i class="fas fa-file-text"></i>
+                                Text (<span id="textCount">0</span>)
+                            </button>
+                            <button class="tab-btn" data-type="image">
+                                <i class="fas fa-image"></i>
+                                Images (<span id="imageCount">0</span>)
+                            </button>
+                            <button class="tab-btn" data-type="table">
+                                <i class="fas fa-table"></i>
+                                Tables (<span id="tableCount">0</span>)
+                            </button>
+                        </div>
+                        <div class="tab-content" id="tabContent"></div>
+                    </div>
+
+                    <!-- Chat Results -->
+                    <div class="chat-results" id="chatResults" style="display: none;">
+                        <div class="chat-container" id="chatContainer"></div>
+                        <div class="chat-input-container">
+                            <input type="text" id="chatInput" placeholder="Continue the conversation..." class="chat-input">
+                            <button class="chat-send-btn" id="chatSendBtn">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- Modals -->
+        <div class="modal" id="statsModal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-chart-bar"></i> System Statistics</h3>
+                    <button class="modal-close" id="closeStatsModal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body" id="statsModalBody">
+                    <!-- Statistics content will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Notifications -->
+        <div class="notifications" id="notifications"></div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
+
