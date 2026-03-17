@@ -9,10 +9,10 @@ services:
       POSTGRES_USER: multirag_user
       POSTGRES_PASSWORD: multirag_password
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
-      - "5432:5432"
+      - "5444:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U multirag_user -d multirag"]
       interval: 30s
@@ -23,7 +23,7 @@ services:
   redis:
     image: redis:7-alpine
     ports:
-      - "6379:6379"
+      - "6380:6379"
     volumes:
       - redis_data:/data
     healthcheck:
@@ -42,7 +42,7 @@ services:
     volumes:
       - milvus_data:/var/lib/milvus
     ports:
-      - "19530:19530"
+      - "19535:19530"
     depends_on:
       - etcd
       - minio
@@ -74,8 +74,8 @@ services:
     volumes:
       - minio_data:/minio_data
     ports:
-      - "9000:9000"
-      - "9001:9001"
+      - "9005:9000"
+      - "9006:9001"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
       interval: 30s
@@ -98,7 +98,7 @@ services:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - FLASK_ENV=production
     ports:
-      - "5000:5000"
+      - "5005:5000"
     volumes:
       - ./data:/app/data
       - ./logs:/app/logs
@@ -120,8 +120,8 @@ services:
   nginx:
     image: nginx:alpine
     ports:
-      - "80:80"
-      - "443:443"
+      - "8090:80"
+      - "8443:443"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
       - ./ssl:/etc/nginx/ssl

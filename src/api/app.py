@@ -16,7 +16,7 @@ from core.retriever import MultiVectorRetriever, QueryProcessor
 from core.llm_integration import LLMIntegrator
 from core.query_engine import RealTimeQueryEngine
 from core.streaming_handler import StreamingResponseHandler
-from .streaming_routes import streaming_bp, init_streaming_routes
+from api.streaming_routes import streaming_bp, init_streaming_routes
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -335,16 +335,18 @@ def internal_error(e):
     logger.error(f"Internal server error: {e}")
     return jsonify({'error': 'Internal server error'}), 500
 
+# Initialize components on startup (required for both direct run and flask run)
+if initialize_components():
+    logger.info("All components initialized successfully")
+else:
+    logger.error("Failed to initialize components. Exiting.")
+    sys.exit(1)
+
 if __name__ == '__main__':
-    # Initialize components on startup
-    if initialize_components():
-        logger.info("Starting Multi-RAG API server...")
-        app.run(
-            host=config.HOST,
-            port=config.PORT,
-            debug=config.DEBUG
-        )
-    else:
-        logger.error("Failed to initialize components. Exiting.")
-        sys.exit(1)
+    logger.info("Starting Multi-RAG API server...")
+    app.run(
+        host=config.HOST,
+        port=config.PORT,
+        debug=config.DEBUG
+    )
 
