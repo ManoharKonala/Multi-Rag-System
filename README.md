@@ -1,42 +1,44 @@
-# Multi-RAG: Advanced Multi-Container Retrieval-Augmented Generation
+# Multi-RAG: Advanced Multi-Modal Agentic AI System
 
-A multi-model RAG system designed for deployment-ready scalability, featuring real-time streaming updates and a robust containerized architecture.
+A production-grade, multi-modal Retrieval-Augmented Generation (RAG) system with **Agentic Reasoning** capabilities. This platform goes beyond simple search, employing autonomous query analysis and multi-step reasoning to synthesize insights from Text, Images, and Structured Tables.
 
-## 🚀 Vision
-To provide a production-grade blueprint for large-scale document intelligence systems. This project leverages PostgreSQL for metadata, Milvus for high-performance vector search, and OpenAI's latest models for intelligent synthesis.
+## 🤖 Agentic AI Capabilities
+The system's "Brain" (`AdvancedQueryProcessor`) performs autonomous decision-making to optimize retrieval:
+- **Intent-Driven Decomposition:** Automatically breaks down complex, multi-part questions into atomic sub-queries for broader coverage.
+- **Autonomous Strategy Selection:** Dynamically chooses between `basic_retrieval`, `multi_step_reasoning`, and `advanced_analytical` patterns based on query complexity.
+- **Intent Classification:** Detects whether a query is Factual, Comparative, Analytical, or Procedural to tailor the synthesis logic.
+- **Entity & Keyword Intelligence:** Extracts critical entities (dates, currencies, technical terms) to refine vector space searches.
 
-## 🛠 Architecture
-- **API**: Flask with SSE (Server-Sent Events) for real-time streaming.
-- **Vector DB**: Milvus (Vector storage and retrieval).
-- **Database**: PostgreSQL (Metadata and application state).
-- **Frontend**: Clean, modern UI with real-time status updates via SSE.
-- **Orchestration**: Docker Compose for multi-container synergy.
-- **Reverse Proxy**: Nginx with rate limiting and security headers.
+## 🖼️ Multi-Modal Intelligence
+- **Visual Context (CLIP):** Utilizes OpenAI's CLIP model to generate semantic embeddings for images, charts, and graphs within PDFs.
+- **Structured Data Vectorization:** Employs a specialized `TableProcessor` to parse and summarize complex tabular data into vector-friendly representations.
+- **Cross-Modal Hybrid Search:** Simultaneously searches across disparate vector spaces (Text, Image Descriptions, Table Summaries) for a unified context window.
 
-## 📋 Prerequisites
-- Docker & Docker Compose
-- OpenAI API Key
+## 🛠 Technical Architecture
+- **Vector Core:** **Milvus** for high-dimensional similarity search.
+- **Metadata Layer:** **PostgreSQL** for structured document state and relational metadata.
+- **Performance Layer:** **Redis** for intelligent response caching and session management.
+- **Object Store:** **MinIO** for scalable storage of source artifacts.
+- **Deployment-Ready Optimization:** Custom Docker layering that **bakes-in heavy AI models** (CLIP, SentenceTransformers) to eliminate cold-start delays.
 
-## ⚡ Quick Start
-1. **Clone and Configure**:
+## 🚀 Quick Start
+1. **Infrastructure Setup**:
    ```bash
    cp .env.example .env
-   # Edit .env with your OpenAI API Key
+   # Add your OPENAI_API_KEY. Default host port: 8090
    ```
-2. **Launch Infrastructure**:
+2. **One-Command Launch**:
    ```bash
-   docker-compose up -d
+   docker compose -p multi-rag-system up -d --build
    ```
-3. **Access the App**:
-   - Frontend: [http://localhost](http://localhost)
-   - API Status: [http://localhost/health](http://localhost/health)
+3. **Endpoints**:
+   - **Frontend UI:** [http://localhost:8090](http://localhost:8090)
+   - **System Health:** [http://localhost:8090/health](http://localhost:8090/health)
 
-## 📁 Directory Structure
-- `src/core/`: RAG logic, embeddings, and database models.
-- `src/api/`: REST and streaming endpoints.
-- `src/utils/`: Background processing and pipeline orchestration.
-- `frontend/`: Modern web interface.
-- `data/`: Local storage for uploads and processed artifacts.
+## 📁 Source Organization
+- `src/core/`: Agentic logic, multi-modal embeddings, and RAG orchestrators.
+- `src/api/`: Streaming (SSE) and RESTful interfaces.
+- `nginx.conf`: Hardened reverse-proxy with rate-limiting and security headers.
 
 ---
-Built with ❤️ for the future of AI.
+Built with a focus on **Autonomous Reasoning**, **Multi-Modal Synthesis**, and **Enterprise Scalability**.
